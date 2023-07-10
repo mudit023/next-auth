@@ -23,7 +23,6 @@ function Signup() {
     const passwordRegex = /^(?=.*[a-zA-Z])(?=.*[0-9]).{8,}$/;
     if (password.trim().length >= 8 && passwordRegex.test(password)) {
       setValidPassword({ valid: true, active: true });
-      // setUser({ ...user, password: password });
     } else {
       setValidPassword({ ...validPassword, valid: false });
     }
@@ -73,11 +72,17 @@ function Signup() {
         )}
         <button
           type="submit"
-          className="w-full bg-green-700 font-semibold rounded"
+          className="w-full bg-green-700 font-semibold rounded mt-2 py-1 px-2"
         >
           Signup
         </button>
       </form>
+      <p className="text-sm mt-1">
+        Already have an account?{" "}
+        <Link href={"/login"} className="text-sm underline">
+          login here
+        </Link>
+      </p>
     </div>
   );
 }
