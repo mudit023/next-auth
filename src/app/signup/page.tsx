@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import axios from "axios";
@@ -12,19 +12,26 @@ function Signup() {
     email: "",
     password: "",
   });
-  const [isValid, setIsValid] = useState<boolean | null>(null);
-
-  const passwordValidation = () => {
+  const [validPassword, setValidPassword] = useState({
+    valid: false,
+    active: false,
+  });
+  const VALID_PASSWORD =
+    "A valid password must contain 8 alphanumeric characters with atleast 1 number(0-9) & alphabet(a-z).";
+  useEffect(() => {
     const password = user.password;
     const passwordRegex = /^(?=.*[a-zA-Z])(?=.*[0-9]).{8,}$/;
     if (password.trim().length >= 8 && passwordRegex.test(password)) {
-      setIsValid(true);
-      setUser({ ...user, password: password });
+      setValidPassword({ valid: true, active: true });
+      // setUser({ ...user, password: password });
     } else {
-      setUser({ ...user, password: "" });
-      setIsValid(false);
+      setValidPassword({ ...validPassword, valid: false });
     }
-  };
+  }, [user.password]);
+
+  function focusHandler() {
+    setValidPassword({ ...validPassword, active: true });
+  }
 
   const onSignup = async () => {};
   return (
@@ -49,17 +56,17 @@ function Signup() {
           type="password"
           value={user.password}
           onChange={(e) => setUser({ ...user, password: e.target.value })}
-          onBlur={passwordValidation}
+          onBlur={focusHandler}
           placeholder="password"
           className={`py-1 px-2 outline-none rounded text-black ${
-            isValid === false
+            !validPassword.valid && validPassword.active
               ? "border-[2px] border-solid border-red-600"
               : "border-none"
           }`}
         />
-        {isValid === false ? (
-          <p className="text-red-700 text-xs font-light">
-            Create a valid password
+        {!validPassword.valid && validPassword.active ? (
+          <p className="text-red-700 text-[10px] leading-3 font-light max-w-[300px] text-center">
+            {VALID_PASSWORD}
           </p>
         ) : (
           <></>
