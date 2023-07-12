@@ -21,9 +21,20 @@ export async function POST(request: NextRequest){
       return NextResponse.json({error:"username already taken"}, {status:400})
       
     // hashing the password
+    const salt = await bcryptjs.genSalt(10);
+    const hashedPassword = await bcryptjs.hash(password, salt);
+
+    const newUser = new User({
+      username,
+      email,
+      password: hashedPassword
+    })
+
+    const savedUser = await newUser.save()
+    // remove it in production
+    console.log("saved user: ",savedUser);
     
-
-
+    return NextResponse.json({message:"User created successfully", success:true, savedUser})
   } catch (error) {
     console.log("Something Went wrong in signup");
     let message;
