@@ -10,9 +10,8 @@ export async function POST(request: NextRequest){
     const reqBody = await request.json();
     const {username, email, password} = reqBody;
 
-    // remove in production
-    console.log(reqBody);
-    
+
+    // checking if the useremail or username already exists in the DB
     const userEmail =  await User.findOne({email})
     const userName = await User.findOne({username})
     if(userEmail)
@@ -31,10 +30,9 @@ export async function POST(request: NextRequest){
     })
 
     const savedUser = await newUser.save()
-    // remove it in production
-    console.log("saved user: ",savedUser);
     
     return NextResponse.json({message:"User created successfully", success:true, savedUser})
+    
   } catch (error) {
     console.log("Something Went wrong in signup");
     let message;
