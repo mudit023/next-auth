@@ -8,6 +8,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { log } from "console";
 
 function Login() {
+  const router = useRouter();
   const [user, setUser] = useState({
     email: "",
     password: "",
@@ -41,6 +42,9 @@ function Login() {
       toast.success(res.data.message, {
         id: loadingToast,
       });
+      setTimeout(() => {
+        router.push("/profile");
+      }, 500);
     } catch (error: any) {
       if (error.response) {
         toast.error(error.response.data.error, {
