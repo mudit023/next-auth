@@ -44,7 +44,7 @@ export async function sendEmail({email, emailType, userId}: emailType){
       from: "muditmishra023@gmail.com",
       to: email,
       subject: emailType===EMAIL_TYPE.verify_account?"Verify your email":"Reset your account password",
-      html: `<p>Click on <a href="${process.env.DOMAIN}/verifyemail?token=${hashToken}">this link<a/> to ${emailType===EMAIL_TYPE.verify_account?"verify your email":"reset your account password"} or copy paste the following link in your browser <br> <i>${process.env.DOMAIN}/verifyemail?token=${hashToken}</i></p>`
+      html: `<p>Click on <a href="https://secure-next-auth.vercel.app//verifyemail?token=${hashToken}">this link<a/> to ${emailType===EMAIL_TYPE.verify_account?"verify your email":"reset your account password"} or copy paste the following link in your browser <br> <i>https://secure-next-auth.vercel.app//verifyemail?token=${hashToken}</i></p>`
     }
 
     const mailRes = await transport.sendMail(mailOptions)
