@@ -8,7 +8,7 @@ import toast, { Toaster } from "react-hot-toast";
 
 function Signup() {
   const router = useRouter();
-  // const [loading, setLoading] = useState(false);
+  const [signup, setSignup] = useState(false);
   const [user, setUser] = useState({
     username: "",
     email: "",
@@ -43,9 +43,10 @@ function Signup() {
         id: laodingToast,
       });
       console.log("successfully signed up!");
+      setSignup(true);
       setTimeout(() => {
         router.push("/login");
-      }, 1500);
+      }, 3500);
     } catch (error) {
       let message;
       if (error instanceof Error) message = error.message;
@@ -62,6 +63,13 @@ function Signup() {
       <div>
         <Toaster />
       </div>
+      {signup ? (
+        <p className="flex justify-center items-center text-green-400 text-sm sm:max-w-[50vw]">
+          Email verification is pending. Please check your email!
+        </p>
+      ) : (
+        <></>
+      )}
       <div className="flex flex-col justify-center items-center text-xl border border-solid border-white rounded-lg py-6 px-4 shadow-xl shadow-slate-900">
         <h1 className="font-extrabold text-3xl tracking-wide">Signup</h1>
         <form
