@@ -7,51 +7,49 @@ import Link from "next/link";
 
 export default function ProfilePage() {
   const router = useRouter();
+
   const [userDetail, setUserDetail] = useState({
     username: "",
-    isVerified: "",
+    isVerified: true,
   });
-  const [loader, setLoader] = useState(false);
+  // const [loader, setLoader] = useState(false);
+
   useEffect(() => {
     async function getUserDetail() {
       try {
-        setLoader(true);
+        // setLoader(true);
         const res = await axios.get("/api/user/user_detail");
-        console.log("user data:", res.data.data);
+        // console.log("user data:", res.data.data);
         if (res?.data?.data) {
-          window.localStorage.setItem("username", res?.data?.data?.username);
-          window.localStorage.setItem(
-            "isVerified",
-            res?.data?.data?.isVerified
-          );
+          localStorage.setItem("username", res?.data?.data?.username);
+          localStorage.setItem("isVerified", res?.data?.data?.isVerified);
           setUserDetail(res?.data?.data);
         } else {
           toast.error("Error occurred");
         }
-        setLoader(false);
+        // setLoader(false);
       } catch (error) {
         if (error instanceof Error) toast.error(error.message);
         else toast.error(String(error));
       }
     }
+
     if (
-      window.localStorage.getItem("username") &&
-      window.localStorage.getItem("isVerified")
+      localStorage.getItem("username") &&
+      localStorage.getItem("isVerified")
     ) {
-      setLoader(true);
-      const nameData = window.localStorage.getItem("username")!;
-      const verifiedData = window.localStorage.getItem("isVerified")!;
+      const nameData = localStorage.getItem("username")!;
+      const verifiedData = localStorage.getItem("isVerified")! === "true";
 
       setUserDetail({
-        ...userDetail,
         username: nameData,
         isVerified: verifiedData,
       });
-      setLoader(false);
     } else {
       getUserDetail();
     }
   }, []);
+
   function logoutHandler() {
     const loadingToast = toast.loading("Logging Out...");
     try {
@@ -88,34 +86,32 @@ export default function ProfilePage() {
       <div>
         <Toaster />
       </div>
-      <div className="p-2 flex-col justify-center items-center gap-4">
-        {loader ? (
-          <p>Loading...</p>
-        ) : (
-          <>
-            {userDetail?.isVerified === "true" ? (
-              <></>
-            ) : (
-              <p className="text-green-400 text-sm sm:max-w-[50vw]">
-                Email verification is pending. Please verify your email!
-              </p>
-            )}
-            <button
-              onClick={logoutHandler}
-              className="fixed top-2 right-2 border border-solid border-cyan-700 shadow-md shadow-cyan-800 px-2 py-1 text-sm rounded-sm"
-            >
-              logout
-            </button>
-            <h1 className="text-2xl font-bold tracking-wide">{`Howdy👋 ${userDetail?.username.toUpperCase()}`}</h1>
-            <Link
-              href={`/profile/${userDetail?.username}`}
-              className="px-2 py-1 bg-cyan-300 text-slate-950 inline-block mt-2"
-            >
-              User Profile
-            </Link>
-          </>
-        )}
-      </div>
+      {userDetail?.username === "" ? (
+        <p>Loading....</p>
+      ) : (
+        <div className="p-2 flex-col justify-center items-center gap-4">
+          {userDetail?.isVerified ? (
+            <></>
+          ) : (
+            <p className="text-green-400 text-sm sm:max-w-[50vw]">
+              Email verification is pending. Please verify your email!
+            </p>
+          )}
+          <button
+            onClick={logoutHandler}
+            className="fixed top-2 right-2 border border-solid border-cyan-700 shadow-md shadow-cyan-800 px-2 py-1 text-sm rounded-sm"
+          >
+            logout
+          </button>
+          <h1 className="text-2xl font-bold tracking-wide">{`Howdy👋 ${userDetail?.username.toUpperCase()}`}</h1>
+          <Link
+            href={`/profile/${userDetail?.username}`}
+            className="px-2 py-1 bg-cyan-300 text-slate-950 inline-block mt-2"
+          >
+            User Profile
+          </Link>
+        </div>
+      )}
     </>
   );
 }

@@ -17,7 +17,8 @@ export async function POST(request: NextRequest){
     if(!user){
       return NextResponse.json({error:"User not found!", success:false}, {status:400})
     }
-
+    console.log("verfy page---------------");
+    
     user.isVerified = true;
     user.verifyToken = undefined;
     user.verifyTokenExpiry = undefined;
