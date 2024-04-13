@@ -32,12 +32,12 @@ export async function POST(request: NextRequest){
 
     const savedUser = await newUser.save()
     // send verification email
-    await sendEmail({email, emailType:EMAIL_TYPE.verify_account, userId:savedUser._id})
+    // await sendEmail({email, emailType:EMAIL_TYPE.verify_account, userId:savedUser._id})
 
     return NextResponse.json({message:"User created successfully", success:true, savedUser})
     
   } catch (error) {
-    console.log("Something Went wrong in signup");
+    console.log("Something Went wrong in signup", error);
     let message;
     if(error instanceof Error)
     message = NextResponse.json({error: error.message}, {status: 500})
